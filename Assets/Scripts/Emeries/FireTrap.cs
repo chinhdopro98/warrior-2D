@@ -40,9 +40,11 @@ public class FireTrap : MonoBehaviour
         yield return new WaitForSeconds(activationDelay);
         spriteRend.color = Color.white;
         active = true;
+        anim.SetBool("activated", true);
         yield return new WaitForSeconds(activeTime);
         active = false;
         triggered = false;
+        anim.SetBool("activated", false);
     }
 
 }
