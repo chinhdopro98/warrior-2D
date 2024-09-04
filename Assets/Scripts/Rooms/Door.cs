@@ -18,10 +18,15 @@ public class Door : MonoBehaviour
             if (other.transform.position.x < transform.position.x)
             {
                 cam.MoveToNewRoom(nextRoom);
+                nextRoom.GetComponent<Rooms>().ActivateRoom(true);
+                previousRoom.GetComponent<Rooms>().ActivateRoom(false);
             }
             else
             {
                 cam.MoveToNewRoom(previousRoom);
+                previousRoom.GetComponent<Rooms>().ActivateRoom(true);
+                nextRoom.GetComponent<Rooms>().ActivateRoom(false);
+
             }
         }
     }
