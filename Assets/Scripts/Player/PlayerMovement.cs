@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,12 +10,20 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpPower;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask wallLayer;
+    [SerializeField] private float coyoteTime;
+    private float coyoteCounter;
     private Animator anim;
     private BoxCollider2D boxCollider;
 
+    [SerializeField] private AudioClip jumpSound;
     private float horizontalInput;
 
     private float wallJumpCoolDown;
+
+    [SerializeField] private float wallJumpX;
+    [SerializeField] private float wallJumpY;
+    [SerializeField] private int extraJumps;
+    private int jumpCounter;
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
@@ -24,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
+        horizontalInput = Input.GetAxis("Horizontal");
 
         if (horizontalInput > 0.01f)
         {
@@ -38,39 +47,69 @@ public class PlayerMovement : MonoBehaviour
 
         anim.SetBool("run", horizontalInput != 0);
         anim.SetBool("grounded", isGrounded());
-
-        if (wallJumpCoolDown < 0.2f)
+        if (Input.GetKeyDown(KeyCode.Space))
+            Jump();
+        if (Input.GetKeyDown(KeyCode.Space) && body.velocity.y > 0)
         {
-            body.velocity = new Vector2(horizontalInput * speed, body.velocity.y);
-            if (onWall() && !isGrounded())
-            {
-                body.gravityScale = 0;
-                body.velocity = Vector2.zero;
-            }else{
-                body.gravityScale = 3;
-            }
-            if (Input.GetKey(KeyCode.Space))
-            {
-                Jump();
-
-            }
+            body.velocity = new Vector2(body.velocity.x, body.velocity.y);
+        }
+        if (onWall())
+        {
+            body.gravityScale = 0;
+            body.velocity = Vector2.zero;
         }
         else
         {
-            wallJumpCoolDown += Time.deltaTime;
+            body.gravityScale = 7;
+            body.velocity = new Vector2(horizontalInput * speed, body.velocity.y);
+            if (isGrounded())
+            {
+                coyoteCounter = coyoteTime;
+                jumpCounter = extraJumps;
+            }
+            else
+            {
+                coyoteCounter -= Time.deltaTime;
+            }
         }
     }
 
     private void Jump()
     {
-        if(isGrounded()){
-            body.velocity = new Vector2(body.velocity.x, jumpPower);
-            anim.SetTrigger("jump");
-
-        }else if(onWall() && !isGrounded()){
-            wallJumpCoolDown = 0;
-            body.velocity = new Vector2(-Mathf.Sign(transform.localScale.x) * 3, 6);
+        if (coyoteCounter <= 0 && !onWall() && jumpCounter <= 0) return;
+        if (onWall())
+        {
+            WallJump();
         }
+        else
+        {
+            if (isGrounded())
+            {
+                body.velocity = new Vector2(body.velocity.x, jumpPower);
+            }
+            else
+            {
+                if (coyoteCounter > 0)
+                {
+                    body.velocity = new Vector2(body.velocity.x, jumpPower);
+                }
+                else
+                {
+                    if (jumpCounter > 0)
+                    {
+                        body.velocity = new Vector2(body.velocity.x, jumpPower);
+                        jumpCounter--;
+                    }
+                }
+            }
+            coyoteCounter = 0;
+        }
+    }
+
+    private void WallJump()
+    {
+        body.AddForce(new Vector2(-Mathf.Sign(transform.localScale.x) * wallJumpX, wallJumpY));
+        wallJumpCoolDown = 0;
     }
     private void OnCollisionEnter2D(Collision2D other)
     {
@@ -87,7 +126,13 @@ public class PlayerMovement : MonoBehaviour
         return raycastHit.collider != null;
     }
 
-    public bool canAttack(){
+    public bool canAttack()
+    {
         return horizontalInput == 0 && isGrounded() && !onWall();
+    }
+
+    private void Deactivate()
+    {
+        gameObject.SetActive(false);
     }
 }

@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "warrios.sln"
+    "dotnet.defaultSolution": "warrior-2D.sln"
 }

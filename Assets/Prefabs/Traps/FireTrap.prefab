@@ -102,6 +102,7 @@ MonoBehaviour:
   damege: 1
   activationDelay: 2
   activeTime: 2
+  fireSound: {fileID: 8300000, guid: 419ba9aadef121741afec4a41c62f924, type: 3}
 --- !u!61 &6579392739373547848
 BoxCollider2D:
   m_ObjectHideFlags: 0

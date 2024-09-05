@@ -20,6 +20,7 @@ public class EnemyProjectile : EmeryDamege
         lifetime = 0;
         gameObject.SetActive(true);
         coll.enabled = true;
+        
     }
 
     private void Update()

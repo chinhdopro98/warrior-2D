@@ -14,6 +14,10 @@ public class Health : MonoBehaviour
     [SerializeField] private float iFramesDuration;
     [SerializeField] private int numberOffFlashes;
     private SpriteRenderer spriteRend;
+
+    [Header("Death sound")]
+    [SerializeField] private AudioClip deathSound;
+    [SerializeField] private AudioClip hurtSound;
     private void Awake()
     {
         currentHealth = startingHealth;
@@ -49,7 +53,7 @@ public class Health : MonoBehaviour
             {
                 component.enabled = false;
             }
-
+            SoundManager.instance.PlaySound(deathSound);
             dead = true;
         }
     }

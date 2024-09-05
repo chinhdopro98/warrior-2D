@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d9ed0dcab86d8644ba59fa98d87a85e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthSound: {fileID: 8300000, guid: e61227208470a6941914a6a69b5aec79, type: 3}
   healthValue: 1
 --- !u!61 &1774807776019039987
 BoxCollider2D:
