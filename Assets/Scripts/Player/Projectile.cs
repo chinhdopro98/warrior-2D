@@ -9,7 +9,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] private float speed;
     private bool hit;
     private float direction;
-private float lifeTime;
+    private float lifeTime;
     private BoxCollider2D boxCollider;
     private Animator anim;
     private void Awake()
@@ -24,7 +24,7 @@ private float lifeTime;
         float movementSpeed = speed * Time.deltaTime * direction;
         transform.Translate(movementSpeed, 0, 0);
         lifeTime += Time.deltaTime;
-        if(lifeTime > 5 ) gameObject.SetActive(false);
+        if (lifeTime > 5) gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -32,6 +32,9 @@ private float lifeTime;
         hit = true;
         boxCollider.enabled = false;
         anim.SetTrigger("explode");
+
+        if (other.tag == "Enemy")
+            other.GetComponent<Health>().TakeDamage(1);
     }
 
     public void SetDirection(float _direction)
@@ -49,7 +52,8 @@ private float lifeTime;
         transform.localScale = new Vector3(localScaleX, transform.localScale.y, transform.localScale.z);
     }
 
-    public void Deactivate(){
+    public void Deactivate()
+    {
         gameObject.SetActive(false);
     }
 }

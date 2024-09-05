@@ -22,6 +22,9 @@ public class Health : MonoBehaviour
 
     }
 
+    [Header("Components")]
+    [SerializeField] private Behaviour[] components;
+
     public void TakeDamage(float _damage)
     {
         currentHealth = Mathf.Clamp(currentHealth - _damage, 0, startingHealth);
@@ -34,7 +37,19 @@ public class Health : MonoBehaviour
             if (!dead)
         {
             anim.SetTrigger("die");
-            GetComponent<PlayerMovement>().enabled = false;
+            //Player
+            // if (GetComponent<PlayerMovement>() != null)
+            //     GetComponent<PlayerMovement>().enabled = false;
+            // //Enemy
+            // if (GetComponentInParent<EnemyPatrol>() != null)
+            //     GetComponentInParent<EnemyPatrol>().enabled = false;
+            // if (GetComponent<MeleeEnemy>() != null)
+            //     GetComponent<MeleeEnemy>().enabled = false;
+            foreach (Behaviour component in components)
+            {
+                component.enabled = false;
+            }
+
             dead = true;
         }
     }
