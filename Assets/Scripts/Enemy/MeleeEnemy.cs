@@ -24,8 +24,7 @@ public class MeleeEnemy : MonoBehaviour
     [Header("Attack sound")]
     [SerializeField] private AudioClip attackSound;
 
-    private void Awake()
-    {
+    private void Awake() {
         anim = GetComponent<Animator>();
         enemyPatrol = GetComponentInParent<EnemyPatrol>();
     }
